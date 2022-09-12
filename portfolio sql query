@@ -1,0 +1,18 @@
+SELECT  
+usertype,
+-- Here with concat i am pulling data from differnt columns and changing name to route 
+CONCAT(start_station_name,"to",end_station_name) AS route,
+-- next i counted the number of trips in each row
+COUNT(*) as num_trips,
+-- I am now rounding up the number of average trip duration by dividing by the time it takes for data return
+Round(AVG(cast(tripduration as int64)/60),2) AS duration
+--this is where the data is coming from
+ FROM `bigquery-public-data.new_york_citibike.citibike_trips` 
+ --here i am grouping the summarization of the count and round command
+ GROUP BY
+ start_station_name, end_station_name, usertype
+ --now i am adding the order i want the data to apper in the way of descending order
+ ORDER BY
+ num_trips DESC
+ --the amount of rows i want to be shown with limmit and the selected number
+ LIMIT 10
